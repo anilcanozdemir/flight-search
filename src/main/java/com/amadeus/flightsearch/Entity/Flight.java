@@ -12,19 +12,20 @@ import java.util.Date;
 @Setter
 
 public class Flight {
-    @JoinColumn
+    @JoinColumn(name = "arrival_airportId")
     @ManyToOne
     Airport arrivalAirport;
-    @JoinColumn
+    @JoinColumn(name = "departure_airportId")
     @ManyToOne
     Airport departureAirport;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long id;
+    private Long flightId;
     @Column
     private Date arrivalDate;
     @Column
     private Date departureDate;
-
+    @Column
+    private Double price;
 }
