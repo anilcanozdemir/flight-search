@@ -10,8 +10,7 @@ import com.amadeus.flightsearch.Service.Contrats.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,27 +22,32 @@ public class AirportController implements CRUDController<AirportResponseDto, Air
 
     private final AirportService airportService;
     @Override
-    public ResponseEntity<Result> add(AirportSaveRequestDto airportSaveRequestDto) {
+    @PostMapping("/add")
+    public ResponseEntity<Result> add(@RequestBody AirportSaveRequestDto airportSaveRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.airportService.add(airportSaveRequestDto));
     }
 
     @Override
+    @GetMapping("/getAll")
     public ResponseEntity<DataResult<List<AirportResponseDto>>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.getAll());
     }
 
     @Override
-    public ResponseEntity<DataResult<AirportResponseDto>> getById(Long id) {
+    @GetMapping("/getById")
+    public ResponseEntity<DataResult<AirportResponseDto>> getById(@RequestParam Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.getById(id));
     }
 
     @Override
-    public ResponseEntity<Result> updateById(AirportUpdateRequestDto airportUpdateRequestDto) {
+    @PostMapping("/updateById")
+    public ResponseEntity<Result> updateById(@RequestBody AirportUpdateRequestDto airportUpdateRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.updateById(airportUpdateRequestDto));
     }
 
     @Override
-    public ResponseEntity<DataResult<AirportResponseDto>> deleteById(Long id) {
+    @PostMapping("/deleteById")
+    public ResponseEntity<DataResult<AirportResponseDto>> deleteById(@RequestParam Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.deleteByid(id));
     }
 }
