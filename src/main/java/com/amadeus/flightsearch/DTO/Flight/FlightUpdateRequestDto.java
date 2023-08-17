@@ -1,6 +1,5 @@
 package com.amadeus.flightsearch.DTO.Flight;
 
-import com.amadeus.flightsearch.Entity.Airport;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +9,9 @@ import java.util.Date;
 @Setter
 public class FlightUpdateRequestDto {
 
-    Airport arrivalAirport;
+    Long arrivalAirportId;
 
-    Airport departureAirport;
+    Long departureAirportId;
 
     private Long flightId;
 

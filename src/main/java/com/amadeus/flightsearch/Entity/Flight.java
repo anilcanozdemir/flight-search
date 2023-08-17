@@ -12,10 +12,10 @@ import java.util.Date;
 @Setter
 
 public class Flight {
-    @JoinColumn(name = "arrival_airportId")
+    @JoinColumn(name = "arrivalAirportId")
     @ManyToOne
     Airport arrivalAirport;
-    @JoinColumn(name = "departure_airportId")
+    @JoinColumn(name = "departureAirportId")
     @ManyToOne
     Airport departureAirport;
     @Id

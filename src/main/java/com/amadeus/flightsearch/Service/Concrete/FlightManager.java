@@ -1,23 +1,19 @@
 package com.amadeus.flightsearch.Service.Concrete;
 
-import com.amadeus.flightsearch.Core.Exception.AirportListEmptyException;
-import com.amadeus.flightsearch.Core.Exception.AirportNotFoundException;
 import com.amadeus.flightsearch.Core.Exception.FlightListEmptyException;
 import com.amadeus.flightsearch.Core.Exception.FlightNotFoundException;
 import com.amadeus.flightsearch.Core.Result.DataResult;
 import com.amadeus.flightsearch.Core.Result.Result;
 import com.amadeus.flightsearch.Core.Result.SuccessDataResult;
 import com.amadeus.flightsearch.Core.Result.SuccessResult;
-import com.amadeus.flightsearch.DTO.Airport.AirportResponseDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightResponseDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightSaveRequestDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightUpdateRequestDto;
-import com.amadeus.flightsearch.Entity.Airport;
 import com.amadeus.flightsearch.Entity.Flight;
+import com.amadeus.flightsearch.ModelMapper.FlightMapper;
 import com.amadeus.flightsearch.Repository.FlightRepository;
 import com.amadeus.flightsearch.Service.Contrats.FlightService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +23,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FlightManager implements FlightService {
     private final FlightRepository flightRepository;
-    private final ModelMapper modelMapper;
+    private final FlightMapper flightMapper;
 
     @Override
     public Result add(FlightSaveRequestDto flightSaveRequestDto) {
-        Flight savedFlight = this.flightRepository.save(modelMapper.map(flightSaveRequestDto, Flight.class));
-        return new SuccessResult("Flight created with the id"  + savedFlight.getFlightId());
+
+        Flight savedFlight = this.flightRepository.save(flightMapper.saveRequestDtoToEntity(flightSaveRequestDto));
+        return new SuccessResult("Flight created with the id" + savedFlight.getFlightId());
     }
 
     @Override
@@ -40,7 +37,7 @@ public class FlightManager implements FlightService {
         Optional<Flight> flight = flightRepository.findById(id);
         flight.ifPresent(flightRepository::delete);
         return new SuccessDataResult<>("Flight with id  " + id + "  deleted successfully.",
-                flight.map(value -> modelMapper.map(value, FlightResponseDto.class))
+                flight.map(flightMapper::entitytoResponseDto)
                         .orElseThrow(() -> new FlightNotFoundException(id)));
     }
 
@@ -52,7 +49,7 @@ public class FlightManager implements FlightService {
         }
         return new SuccessDataResult<>("FlightList successfully called.",
                 flightList.stream()
-                        .map(x -> modelMapper.map(x, FlightResponseDto.class))
+                        .map(flightMapper::entitytoResponseDto)
                         .toList());
     }
 
@@ -60,7 +57,7 @@ public class FlightManager implements FlightService {
     public DataResult<FlightResponseDto> getById(Long id) {
         Optional<Flight> flight = this.flightRepository.findById(id);
         return new SuccessDataResult<>("Flight with id " + id + "successfully called.",
-                flight.map(value -> modelMapper.map(value, FlightResponseDto.class))
+                flight.map(flightMapper::entitytoResponseDto)
                         .orElseThrow(() -> new FlightNotFoundException(id)));
     }
 
@@ -70,7 +67,7 @@ public class FlightManager implements FlightService {
         if (flightOld.isEmpty()) {
             throw new FlightNotFoundException(flightUpdateRequestDto.getFlightId());
         }
-        Flight flight = modelMapper.map(flightUpdateRequestDto, Flight.class);
+        Flight flight = flightMapper.updateRequestDtoEntity(flightUpdateRequestDto);
         this.flightRepository.save(flight);
         return new SuccessResult("Successfully updated flight by id" + flight.getFlightId());
     }

@@ -10,10 +10,10 @@ import com.amadeus.flightsearch.DTO.Airport.AirportResponseDto;
 import com.amadeus.flightsearch.DTO.Airport.AirportSaveRequestDto;
 import com.amadeus.flightsearch.DTO.Airport.AirportUpdateRequestDto;
 import com.amadeus.flightsearch.Entity.Airport;
+import com.amadeus.flightsearch.ModelMapper.AirportMapper;
 import com.amadeus.flightsearch.Repository.AirportRepository;
 import com.amadeus.flightsearch.Service.Contrats.AirportService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,14 +23,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AirportManager implements AirportService {
     private final AirportRepository airportRepository;
-    private final ModelMapper modelMapper;
+    private final AirportMapper airportMapper;
 
     @Override
     public Result add(AirportSaveRequestDto airportSaveRequestDto) {
-        Airport savedAirport = this.airportRepository.save(modelMapper.map(airportSaveRequestDto, Airport.class));
+        Airport savedAirport = this.airportRepository.save(airportMapper.saveRequestDtoToEntity(airportSaveRequestDto));
         return new SuccessResult("To city   :" + savedAirport.getCityName() +
-                "with id  :" + savedAirport.getAirportId() +
-                " airport added.");
+                " with id  : " + savedAirport.getAirportId() +
+                "  airport added.");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AirportManager implements AirportService {
         Optional<Airport> airport = airportRepository.findById(id);
         airport.ifPresent(airportRepository::delete);
         return new SuccessDataResult<>("Company with id  " + id + "  deleted successfully.",
-                airport.map(value -> modelMapper.map(value, AirportResponseDto.class))
+                airport.map(airportMapper::entitytoResponseDto)
                         .orElseThrow(() -> new AirportNotFoundException(id)));
 
 
@@ -52,7 +52,7 @@ public class AirportManager implements AirportService {
         }
         return new SuccessDataResult<>("CompanyList successfully called.",
                 airportList.stream()
-                        .map(x -> modelMapper.map(x, AirportResponseDto.class))
+                        .map(airportMapper::entitytoResponseDto)
                         .toList());
 
     }
@@ -61,7 +61,7 @@ public class AirportManager implements AirportService {
     public DataResult<AirportResponseDto> getById(Long id) {
         Optional<Airport> airport = this.airportRepository.findById(id);
         return new SuccessDataResult<>("Company with id " + id + "successfully called.",
-                airport.map(value -> modelMapper.map(value, AirportResponseDto.class))
+                airport.map(airportMapper::entitytoResponseDto)
                         .orElseThrow(() -> new AirportNotFoundException(id)));
 
     }
@@ -71,14 +71,14 @@ public class AirportManager implements AirportService {
         Optional<Airport> airportOld = this.airportRepository.findById(airportUpdateRequestDto.getAirportId());
         if (airportOld.isPresent()) {
             if (!airportOld.get().getCityName().equals(airportUpdateRequestDto.getCityName())) {
-                this.airportRepository.save(modelMapper.map(airportUpdateRequestDto, Airport.class));
+                this.airportRepository.save(airportMapper.updateRequestDtoEntity(airportUpdateRequestDto));
             }
             return new SuccessResult("To city   :" + airportUpdateRequestDto.getCityName() +
                     "with id  :" + airportUpdateRequestDto.getAirportId() +
                     " airport updated.");
         }
 
-            throw new AirportNotFoundException(airportUpdateRequestDto.getAirportId());
+        throw new AirportNotFoundException(airportUpdateRequestDto.getAirportId());
 
     }
 }
