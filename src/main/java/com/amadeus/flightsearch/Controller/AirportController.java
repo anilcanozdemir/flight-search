@@ -18,36 +18,44 @@ import java.util.List;
 @RequestMapping("/airport")
 @RestController
 @RequiredArgsConstructor
+//@Api(value="Airport API Dökümasyonu")
 public class AirportController implements CRUDController<AirportResponseDto, AirportSaveRequestDto, AirportUpdateRequestDto> {
 
     private final AirportService airportService;
+
     @Override
     @PostMapping("/add")
-    public ResponseEntity<Result> add(@RequestBody AirportSaveRequestDto airportSaveRequestDto) {
+    //  @ApiOperation(value="Airport ekler")
+
+    public ResponseEntity<Result> add(@RequestBody /*@ApiParam(value = "Airport Save Request Data",required = true) */AirportSaveRequestDto airportSaveRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.airportService.add(airportSaveRequestDto));
     }
 
     @Override
     @GetMapping("/getAll")
+    //     @ApiOperation(value="Airport listesi döner")
     public ResponseEntity<DataResult<List<AirportResponseDto>>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.getAll());
     }
 
     @Override
     @GetMapping("/getById")
-    public ResponseEntity<DataResult<AirportResponseDto>> getById(@RequestParam Long id) {
+    //  @ApiOperation(value="Id ye göre Airport döner")
+    public ResponseEntity<DataResult<AirportResponseDto>> getById(@RequestParam/* @ApiParam(value = "Airport id",required = true)*/  Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.getById(id));
     }
 
     @Override
     @PostMapping("/updateById")
-    public ResponseEntity<Result> updateById(@RequestBody AirportUpdateRequestDto airportUpdateRequestDto) {
+    // @ApiOperation(value="Id ye göre Airport güncellemesi yapar.")
+    public ResponseEntity<Result> updateById(@RequestBody/* @ApiParam(value = "AirportUpdateRequestDto",required = true)*/ AirportUpdateRequestDto airportUpdateRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.updateById(airportUpdateRequestDto));
     }
 
     @Override
     @PostMapping("/deleteById")
-    public ResponseEntity<DataResult<AirportResponseDto>> deleteById(@RequestParam Long id) {
+    //@ApiOperation(value="Id ye göre Airport silmesi yapar.")
+    public ResponseEntity<DataResult<AirportResponseDto>> deleteById(@RequestParam /*@ApiParam(value = "Airport id",required = true) */Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.deleteByid(id));
     }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+//@ApiModel(value = "Airport Update Request DTO",description = "Airport Update Request Data Transfer Object")
 public class AirportUpdateRequestDto {
 
     private Long airportId;

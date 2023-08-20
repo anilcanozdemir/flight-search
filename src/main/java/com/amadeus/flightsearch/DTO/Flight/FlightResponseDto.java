@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+//@ApiModel(value = "Flight Response DTO",description = "Flight Response Data Transfer Object")
 public class FlightResponseDto {
 
     Long arrivalAirportId;

@@ -7,6 +7,8 @@ import java.util.Date;
 
 @Getter
 @Setter
+//@ApiModel(value = "Flight Update Request DTO",description = "Flight Update Request Data Transfer Object")
+
 public class FlightUpdateRequestDto {
 
     Long arrivalAirportId;

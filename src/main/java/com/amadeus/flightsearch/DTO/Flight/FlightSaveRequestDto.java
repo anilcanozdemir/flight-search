@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+//@ApiModel(value = "Flight Save Request DTO",description = "Flight Save Request Data Transfer Object")
 public class FlightSaveRequestDto {
 
     Long arrivalAirportId;
