@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,10 +16,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -26,20 +29,30 @@ public class SpringSecurityConfig {
 
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers(HttpMethod.GET,"/flight/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET,"/airport/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/flight/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/airport/**").permitAll();
 
-                    authorize.requestMatchers(HttpMethod.POST,"/airport/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.POST,"/flight/**").hasRole("ADMIN");
+                    authorize.requestMatchers("/api-docs**").permitAll();
+                    authorize.requestMatchers("/v3/**", "/swagger-ui/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/airport/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.POST, "/flight/**").hasRole("ADMIN");
                 })
 
 
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
-
     @Bean
-    public UserDetailsService userDetailsService(){
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) ->     web.ignoring().requestMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
+    }
+    @Bean
+    public UserDetailsService userDetailsService() {
 
         UserDetails user = User.builder()
                 .username("user")
