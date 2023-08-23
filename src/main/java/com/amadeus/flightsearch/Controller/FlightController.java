@@ -6,6 +6,8 @@ import com.amadeus.flightsearch.DTO.Flight.FlightResponseDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightSaveRequestDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightUpdateRequestDto;
 import com.amadeus.flightsearch.Service.Contrats.FlightService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 //@Api(value = "Flight API Dökümasyonu")
-
+@ApiResponse(responseCode = "401", description = "Unauthorized, login required")
+@ApiResponse(responseCode = "500", description = "Internal server error, this should not happen")
+@Tag(name = "Flight API Dökümasyonu", description = "Flight CRUD işlemleri için endpoint")
 public class FlightController implements CRUDController<FlightResponseDto, FlightSaveRequestDto, FlightUpdateRequestDto> {
     private final FlightService flightService;
 

@@ -2,10 +2,7 @@ package com.amadeus.flightsearch.Service.Concrete;
 
 import com.amadeus.flightsearch.Core.Exception.FlightListEmptyException;
 import com.amadeus.flightsearch.Core.Exception.FlightNotFoundException;
-import com.amadeus.flightsearch.Core.Result.DataResult;
-import com.amadeus.flightsearch.Core.Result.Result;
-import com.amadeus.flightsearch.Core.Result.SuccessDataResult;
-import com.amadeus.flightsearch.Core.Result.SuccessResult;
+import com.amadeus.flightsearch.Core.Result.*;
 import com.amadeus.flightsearch.DTO.Flight.FlightResponseDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightSaveRequestDto;
 import com.amadeus.flightsearch.DTO.Flight.FlightSearchResponseListDto;
@@ -26,10 +23,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -88,13 +82,20 @@ public class FlightManager implements FlightService {
 
     @Override
     public DataResult<FlightSearchResponseListDto> getByPref(Long departureAirportId, Long arrivalAirportId, Date departureDate, Date returnDate) {
-        List<Flight> departureFlightList = flightRepository
-                .findByDepartureAirport_AirportIdAndArrivalAirport_AirportIdAndDepartureDateBetween(
-                        departureAirportId, arrivalAirportId, departureDate, addDay(departureDate));
-
-        List<Flight> returningFlightList = flightRepository.
-                findByDepartureAirport_AirportIdAndArrivalAirport_AirportIdAndDepartureDateBetween(
-                        arrivalAirportId, departureAirportId, returnDate, addDay(returnDate));
+        List<Flight> departureFlightList = getByDate(
+                departureAirportId, arrivalAirportId, departureDate);
+        List<Flight> returningFlightList = getByDate(
+                arrivalAirportId, departureAirportId, returnDate);
+        if (returningFlightList.isEmpty() && departureFlightList.isEmpty())
+            throw new FlightListEmptyException("FlightLists are empty.");
+        else if (returningFlightList.isEmpty())
+            return new ErrorDataResult<>("returningFlight is empty."
+                    , new FlightSearchResponseListDto(new ArrayList<>(), departureFlightList.stream().map(flightMapper::entitytoResponseDto).toList())
+            );
+        else if (departureFlightList.isEmpty())
+            return new ErrorDataResult<>("departureFlightList is empty."
+                    , new FlightSearchResponseListDto(returningFlightList.stream().map(flightMapper::entitytoResponseDto).toList(), new ArrayList<>())
+            );
 
         return new SuccessDataResult<>("FlightSearchResponseLists successfully called."
                 , new FlightSearchResponseListDto(returningFlightList.stream().map(flightMapper::entitytoResponseDto).toList()
@@ -109,11 +110,17 @@ public class FlightManager implements FlightService {
         return cal.getTime();
     }
 
-    @Override
-    public DataResult<List<FlightResponseDto>> getByPref(Long departureAirportId, Long arrivalAirportId, Date departureDate) {
-        List<Flight> departureFlightList = flightRepository
+    private List<Flight> getByDate(Long departureAirportId, Long arrivalAirportId, Date departureDate) {
+        return this.flightRepository
                 .findByDepartureAirport_AirportIdAndArrivalAirport_AirportIdAndDepartureDateBetween(
                         departureAirportId, arrivalAirportId, departureDate, addDay(departureDate));
+
+    }
+
+    @Override
+    public DataResult<List<FlightResponseDto>> getByPref(Long departureAirportId, Long arrivalAirportId, Date departureDate) {
+        List<Flight> departureFlightList = getByDate(
+                departureAirportId, arrivalAirportId, departureDate);
         return new SuccessDataResult<>("FlightList successfully called.",
                 departureFlightList.stream()
                         .map(flightMapper::entitytoResponseDto)

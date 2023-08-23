@@ -7,6 +7,8 @@ import com.amadeus.flightsearch.DTO.Airport.AirportResponseDto;
 import com.amadeus.flightsearch.DTO.Airport.AirportSaveRequestDto;
 import com.amadeus.flightsearch.DTO.Airport.AirportUpdateRequestDto;
 import com.amadeus.flightsearch.Service.Contrats.AirportService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,10 @@ import java.util.List;
 @RequestMapping("/airport")
 @RestController
 @RequiredArgsConstructor
+@ApiResponse(responseCode = "401", description = "Unauthorized, login required")
+@ApiResponse(responseCode = "500", description = "Internal server error, this should not happen")
 //@Api(value="Airport API Dökümasyonu")
+@Tag(name = "Airport API Dökümasyonu", description = "Airport CRUD işlemleri için endpoint")
 public class AirportController implements CRUDController<AirportResponseDto, AirportSaveRequestDto, AirportUpdateRequestDto> {
 
     private final AirportService airportService;
