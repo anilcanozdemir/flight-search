@@ -20,9 +20,8 @@ import java.util.List;
 @RequestMapping("/airport")
 @RestController
 @RequiredArgsConstructor
-@ApiResponse(responseCode = "401", description = "Unauthorized, login required")
+
 @ApiResponse(responseCode = "500", description = "Internal server error, this should not happen")
-//@Api(value="Airport API Dökümasyonu")
 @Tag(name = "Airport API Dökümasyonu", description = "Airport CRUD işlemleri için endpoint")
 public class AirportController implements CRUDController<AirportResponseDto, AirportSaveRequestDto, AirportUpdateRequestDto> {
 
@@ -30,6 +29,7 @@ public class AirportController implements CRUDController<AirportResponseDto, Air
 
     @Override
     @PostMapping("/add")
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     //  @ApiOperation(value="Airport ekler")
 
     public ResponseEntity<Result> add(@RequestBody /*@ApiParam(value = "Airport Save Request Data",required = true) */AirportSaveRequestDto airportSaveRequestDto) {
@@ -51,6 +51,7 @@ public class AirportController implements CRUDController<AirportResponseDto, Air
     }
 
     @Override
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     @PostMapping("/updateById")
     // @ApiOperation(value="Id ye göre Airport güncellemesi yapar.")
     public ResponseEntity<Result> updateById(@RequestBody/* @ApiParam(value = "AirportUpdateRequestDto",required = true)*/ AirportUpdateRequestDto airportUpdateRequestDto) {
@@ -58,7 +59,9 @@ public class AirportController implements CRUDController<AirportResponseDto, Air
     }
 
     @Override
+
     @PostMapping("/deleteById")
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     //@ApiOperation(value="Id ye göre Airport silmesi yapar.")
     public ResponseEntity<DataResult<AirportResponseDto>> deleteById(@RequestParam /*@ApiParam(value = "Airport id",required = true) */Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.airportService.deleteByid(id));

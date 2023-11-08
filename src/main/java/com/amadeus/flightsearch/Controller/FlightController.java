@@ -29,6 +29,7 @@ public class FlightController implements CRUDController<FlightResponseDto, Fligh
     private final FlightService flightService;
 
     @Override
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     @PostMapping("/add")
     // @ApiOperation(value = "Flight ekler")
     public ResponseEntity<Result> add(@RequestBody /*@ApiParam(value = "FlightSaveRequestDto", required = true)*/ FlightSaveRequestDto flightSaveRequestDto) {
@@ -50,6 +51,7 @@ public class FlightController implements CRUDController<FlightResponseDto, Fligh
     }
 
     @Override
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     @PostMapping("/updateById")
     //  @ApiOperation(value = "Id ye göre Airport güncellemesi yapar.")
     public ResponseEntity<Result> updateById(@RequestBody/* @ApiParam(value = "FlightUpdateRequestDto", required = true) */FlightUpdateRequestDto flightUpdateRequestDto) {
@@ -57,6 +59,7 @@ public class FlightController implements CRUDController<FlightResponseDto, Fligh
     }
 
     @Override
+    @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     @PostMapping("/deleteById")
     //  @ApiOperation(value = "Id ye göre Airport silmesi yapar.")
     public ResponseEntity<DataResult<FlightResponseDto>> deleteById(@RequestParam /*@ApiParam(value = "Flight id", required = true)*/ Long id) {
