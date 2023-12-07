@@ -13,7 +13,4 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             Long airportId, Long airportId1, Date departureDateStart, Date departureDateEnd);
 
 
-
-  
-
 }

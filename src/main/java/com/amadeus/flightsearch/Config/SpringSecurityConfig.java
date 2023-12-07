@@ -42,15 +42,17 @@ public class SpringSecurityConfig {
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) ->     web.ignoring().requestMatchers("/v2/api-docs",
+        return (web) -> web.ignoring().requestMatchers("/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**");
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
 

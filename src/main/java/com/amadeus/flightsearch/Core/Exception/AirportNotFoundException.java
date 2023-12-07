@@ -1,6 +1,6 @@
 package com.amadeus.flightsearch.Core.Exception;
 
-public class AirportNotFoundException extends EntityNotFoundException{
+public class AirportNotFoundException extends EntityNotFoundException {
 
 
     public AirportNotFoundException(Long id) {

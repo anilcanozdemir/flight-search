@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class AirportMapper implements MapperProfile<AirportResponseDto, AirportSaveRequestDto, AirportUpdateRequestDto, Airport> {
     @Override
     public AirportResponseDto entitytoResponseDto(Airport airport) {
-        AirportResponseDto airportResponseDto=new AirportResponseDto();
+        AirportResponseDto airportResponseDto = new AirportResponseDto();
         airportResponseDto.setAirportId(airport.getAirportId());
         airportResponseDto.setCityName(airport.getCityName());
 
@@ -20,14 +20,14 @@ public class AirportMapper implements MapperProfile<AirportResponseDto, AirportS
 
     @Override
     public Airport saveRequestDtoToEntity(AirportSaveRequestDto airportSaveRequestDto) {
-       Airport airport=new Airport();
-       airport.setCityName(airportSaveRequestDto.getCityName());
-       return airport;
+        Airport airport = new Airport();
+        airport.setCityName(airportSaveRequestDto.getCityName());
+        return airport;
     }
 
     @Override
     public Airport updateRequestDtoEntity(AirportUpdateRequestDto airportUpdateRequestDto) {
-        Airport airport=new Airport();
+        Airport airport = new Airport();
         airport.setCityName(airportUpdateRequestDto.getCityName());
         airport.setAirportId(airportUpdateRequestDto.getAirportId());
         return airport;
