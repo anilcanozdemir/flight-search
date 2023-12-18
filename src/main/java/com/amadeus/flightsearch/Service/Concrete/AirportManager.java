@@ -34,7 +34,7 @@ public class AirportManager implements AirportService {
     }
 
     @Override
-    public DataResult<AirportResponseDto> deleteByid(Long id) {
+    public DataResult<AirportResponseDto> deleteById(Long id) {
         Optional<Airport> airport = airportRepository.findById(id);
         airport.ifPresent(airportRepository::delete);
         return new SuccessDataResult<>("Company with id  " + id + "  deleted successfully.",

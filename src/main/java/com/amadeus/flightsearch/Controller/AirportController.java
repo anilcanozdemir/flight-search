@@ -64,6 +64,6 @@ public class AirportController implements CRUDController<AirportResponseDto, Air
     @ApiResponse(responseCode = "401", description = "Unauthorized, login required")
     //@ApiOperation(value="Id ye göre Airport silmesi yapar.")
     public ResponseEntity<DataResult<AirportResponseDto>> deleteById(@RequestParam /*@ApiParam(value = "Airport id",required = true) */Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.airportService.deleteByid(id));
+        return ResponseEntity.status(HttpStatus.OK).body(this.airportService.deleteById(id));
     }
 }

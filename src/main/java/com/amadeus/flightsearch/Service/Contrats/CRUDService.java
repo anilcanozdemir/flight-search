@@ -9,7 +9,7 @@ public interface CRUDService<EntityResponseDto, EntitySaveRequestDto, EntityUpda
 
     Result add(EntitySaveRequestDto entitySaveRequestDto);
 
-    DataResult<EntityResponseDto> deleteByid(Long id);
+    DataResult<EntityResponseDto> deleteById(Long id);
 
     DataResult<List<EntityResponseDto>> getAll();
 
